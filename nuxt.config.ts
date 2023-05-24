@@ -3,7 +3,7 @@
 export default defineNuxtConfig({
     ssr: false,
     app: {
-        baseURL: "sigweb-upcoming-newsletter"
+        baseURL: "/sigweb-upcoming-newsletter"
     },
     css: [
         'vuetify/lib/styles/main.sass',
