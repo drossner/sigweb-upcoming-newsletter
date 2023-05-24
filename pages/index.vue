@@ -1,6 +1,7 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
 
   <div class="d-flex align-center justify-center flex-column h-screen">
+    <a href="https://github.com/drossner/sigweb-upcoming-newsletter"><v-icon color="black" icon="mdi-github" class="position-sticky" size="x-large"></v-icon></a>
     <v-card class="main-container pa-8 ma-5 d-flex flex-column" style="gap: 1em">
       <h1>Export Settings</h1>
       <v-slide-y-transition group hide-on-leave="">
@@ -9,6 +10,9 @@
         <v-btn key="3" v-if="icalUrl != null && icalUrl.length > 0" @click="loadIcal">Load iCAL</v-btn>
         <v-divider key="4" class="ma-5"></v-divider>
         <v-text-field key="5" v-model="date" type="date" label="Use Events from" hide-details></v-text-field>
+        <v-text-field key="52" v-model="author" label="Author" hide-details></v-text-field>
+        <v-text-field key="53" v-model="position" label="Author Position" hide-details></v-text-field>
+        <v-text-field key="54" v-model="doi" label="DOI" persistent-hint="true" hint="e.g. 10.1145/3583849.3583854"></v-text-field>
 
         <v-btn key="6" @click="parseIcal" v-if="date.length === 10 && icaltext.length > 0" color="primary">Do the Magic</v-btn>
         <!--<v-list v-if="events.length > 0">
@@ -19,13 +23,15 @@
           <v-btn @click="copyLatex">Copy LaTeX</v-btn>
           <v-btn @click="downloadZipFile">Download ZIP</v-btn>
           <v-btn @click="openInOverleaf">Open In Overleaf (Code)</v-btn>
-          <v-btn @click="openInOverleaf2">Open In Overleaf (Project)</v-btn>
         </div>
       </v-slide-y-transition>
 
     </v-card>
     <form ref="overleafForm" id="ol_form" action="https://www.overleaf.com/docs" method="post" target="_blank">
       <input ref="formInput" id="ol_encoded_snip" type="hidden" name="encoded_snip">
+      <input ref="bannerInput" type="hidden" name="encoded_snip" value="New File -> From External URL -> https://drossner.github.io/sigweb-upcoming-newsletter/sigweb-banner.png">
+      <input type="hidden" name="snip_name" value="upcoming-conferences.tex">
+      <input type="hidden" name="snip_name" value="README.txt">
     </form>
 
   </div>
@@ -51,8 +57,13 @@ const icaltext = ref("")
 const date = ref(new Date().toISOString().substring(0,10)) //yyyy-mm-dd
 
 const latexOutput = ref("")
+const author = ref(useAppConfig().defaultAuthor)
+const position = ref(useAppConfig().defaultPosition)
+const doi = ref(useAppConfig().defaultDoi)
+
 const overleafForm = ref(null)
 const formInput = ref(null)
+const bannerInput = ref(null)
 
 
 const events = ref<CalEvent[]>([])
@@ -137,6 +148,10 @@ async function fillTemplate(){
   template = template.replace("%DETAILS_CONTENT", contentEntries)
   template = template.replace("%DETAILS_COOP_CONTENT", coopContentEntries)
 
+  template = template.replaceAll("%AUTHOR%", author.value)
+  template = template.replaceAll("%POSITION%", position.value)
+  template = template.replaceAll("%DOI%", doi.value)
+
   template = template.replaceAll(/(%TEMPLATE_START)(.*)(%TEMPLATE_END)/gs, "")
 
   latexOutput.value = template
@@ -161,11 +176,6 @@ async function downloadZipFile() {
 }
 
 async function openInOverleaf() {
-  formInput.value.value = encodeURIComponent(latexOutput.value)
-  overleafForm.value.submit()
-}
-
-async function openInOverleaf2() {
   formInput.value.value = encodeURIComponent(latexOutput.value)
   overleafForm.value.submit()
 }
