@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
 export default defineNuxtConfig({
     ssr: false,
     css: [
@@ -13,4 +14,7 @@ export default defineNuxtConfig({
             'process.env.DEBUG': false,
         },
     },
+    nitro: {
+        preset: "github-pages"
+    }
 })
