@@ -1,0 +1,143 @@
+\documentclass{scrartcl}
+
+\usepackage[english]{babel}
+
+\usepackage[a4paper,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,marginparwidth=1.75cm]{geometry}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{titling}
+\usepackage{tabularray}
+\usepackage{hyperref}
+\usepackage{needspace}
+
+\title{Upcoming SIGWEB Supported Conferences}
+\author{Daniel Roßner}
+
+\begin{document}
+
+\begin{titlepage}
+\label{first}
+\begin{center}
+    \includegraphics[width=\textwidth]{sigweb-banner.png}
+\end{center}
+
+\vspace*{1em}
+
+    {\LARGE\textbf{\MakeUppercase\thetitle}\hfill}
+
+    \vspace*{.5em}
+
+    \hfill\theauthor, SIGWEB Webmaster
+
+    \par\noindent\rule{\textwidth}{0.2pt}
+
+    \vspace*{.5em}
+
+    \noindent The Special Interest Group on Hypertext and the Web, SIGWEB was created in 1989 to support the community participating in the annual ACM Hypertext Conference. In its fourth decade, SIGWEB continues its efforts to support a wide range of communities and eight annual conferences. SIGWEB supports several specialized conferences, short courses, and workshops of different sizes, as well as the annual Hypertext Conference. SIGWEB sponsored conferences focus on timely topics in applied and computational hypertext and Web disciplines and provide a place for members and the entire applied Hypermedia and Web community to exchange ideas and to meet with and expand their network of colleagues. In this article, we provide a brief overview of SIGWEB sponsored conferences, in addition to events that are in cooperation with SIGWEB.
+
+    \vspace*{1em}
+
+    DOI: xxxx \hfill \url{http://doi.acm.org/xxx}
+
+    \par\noindent\rule{\textwidth}{0.2pt}
+
+    \vspace*{.5em}
+
+    \noindent SIGWEB Sponsored Conferences
+
+    \begin{table}[h!]
+    \centering
+    \begin{tblr}{
+        hlines,
+        vlines,
+        rowsep=1.3mm,
+        width=\linewidth,
+        column{3} = {wd = 3.8cm},
+        column{2} = {wd = 3cm},
+        column{1} = {wd = 2.8cm},
+        colspec = {lXXXX}
+    }
+    %\textbf{\hyperref[lab:umap2023]{UMAP 2023}}  & June 26 -- 29, 2023  & Limassol, Cyprus    & \url{https://www.um.org/umap2023/}  \\
+    %TABLE_BEGIN
+    %TEMPLATE:\textbf{\hyperref[lab:%EVENT_ID%]{%EVENT_SHORT%}}  & %MONTH_SHORT_BEGIN% %BEGIN_DAY% -- %MONTH_SHORT_END% %END_DAY%, %YEAR%   & %LOCATION%  & \url{%URL%} \\
+    %TABLE_CONTENT
+    %TABLE_END
+\end{tblr}
+\end{table}
+
+\noindent SIGWEB Cooperating Conferences
+
+    \begin{table}[h!]
+    \centering
+    \begin{tblr}{
+        hlines,
+        vlines,
+        rowsep=1.3mm,
+        width=\linewidth,
+        column{3} = {wd = 3.8cm},
+        column{2} = {wd = 3cm},
+        column{1} = {wd = 2.8cm},
+        colspec = {lXXXX}
+    }
+    %\textbf{\hyperref[lab:umap2023]{UMAP 2023}}  & June 26 -- 29, 2023  & Limassol, Cyprus    & \url{https://www.um.org/umap2023/}  \\
+    %TABLE__COOP_BEGIN
+    %TEMPLATE:\textbf{\hyperref[lab:%EVENT_ID%]{%EVENT_SHORT%}}  & %MONTH_SHORT_BEGIN% %BEGIN_DAY% -- %MONTH_SHORT_END% %END_DAY%, %YEAR%   & %LOCATION%  & \url{%URL%} \\
+    %TABLE_COOP_CONTENT
+    %TABLE_COOP_END
+\end{tblr}
+\end{table}
+
+\end{titlepage}
+
+
+\section*{SIGWEB SPONSORED CONFERENCES}
+
+Below is an overview of conferences sponsored by SIGWEB, listed in ascending order of when the
+conference takes place. The conference descriptions are mostly derived from their individual
+announcements and web sites, with editorial amendments.
+
+
+%DETAILS_START
+
+%TEMPLATE_START
+\Needspace{18\baselineskip}
+\subsection*{%EVENT_NAME%}
+\label{lab:%EVENT_ID%}
+
+%DESCRIPTION%
+
+\hfill \hyperref[first]{[Back to First Page]}
+
+\begin{table}[h!]
+    \begin{tblr}{
+        column{1} = {wd = 4cm},
+    }
+    Dates & %MONTH_LONG_BEGIN% %BEGIN_DAY% -- %MONTH_LONG_END% %END_DAY%, %YEAR% (conference) \\
+    Location & %LOCATION% \\
+    URL & \url{%URL%}
+
+
+\end{tblr}
+\end{table}
+%TEMPLATE_END
+
+%DETAILS_CONTENT
+
+%DETAILS_END
+
+\clearpage
+
+\section*{SIGWEB COOPERATING CONFERENCES}
+
+%DETAILS_COOP_START
+%template is equals to the other template
+
+%DETAILS_COOP_CONTENT
+
+%DETAILS_COOP_END
+
+
+
+\end{document}
