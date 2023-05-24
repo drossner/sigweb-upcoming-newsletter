@@ -2,6 +2,9 @@
 
 export default defineNuxtConfig({
     ssr: false,
+    app: {
+        baseURL: "sigweb-upcoming-newsletter"
+    }
     css: [
         'vuetify/lib/styles/main.sass',
         '@mdi/font/css/materialdesignicons.min.css'
