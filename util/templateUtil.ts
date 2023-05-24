@@ -38,7 +38,7 @@ export function calEventToTexEvent(calEvent: CalEvent): LatexEvent {
         year: year,
         location: location,
         url: url,
-        name: name.replace(/(?<=[0-9]*)(th|nd|rd)/, (it) => `\\textsuperscript{${it}}`),
+        name: name.replace(/(?<=[0-9]+)(st|th|nd|rd)/, (it) => `\\textsuperscript{${it}}`),
         description: description
     }
 }
