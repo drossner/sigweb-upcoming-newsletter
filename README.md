@@ -1,8 +1,23 @@
-# Nuxt 3 Minimal Starter
+# SIGWEB Upcoming Newsletter (Generator)
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This repository houses the LaTeX template for "Upcoming Conferences" column of the 
+[SIGWEB Newsletter](https://dl.acm.org/newsletter/sigweb), along with a small Web application to parse
+iCal files to populate the template.
 
-## Setup
+Important files:
+- [public/templatex.tex](https://github.com/drossner/sigweb-upcoming-newsletter/blob/main/public/templatex.tex)
+  contains the template with placeholders.
+- [util/templateUtil.ts](https://github.com/drossner/sigweb-upcoming-newsletter/blob/main/util/templateUtil.ts)
+  contains code to populate the template, check the
+  [Index Page](https://github.com/drossner/sigweb-upcoming-newsletter/blob/main/pages/index.vue) as well.
+
+The project is open for pull requests.
+
+## Developer How To
+
+Based on [Nuxt3]((https://nuxt.com/docs/getting-started/introduction)) (static build) and [Vuetify](https://vuetifyjs.com/en/).
+
+### Setup
 
 Make sure to install the dependencies:
 
@@ -17,7 +32,7 @@ npm install
 pnpm install
 ```
 
-## Development Server
+#### Development Server
 
 Start the development server on `http://localhost:3000`
 
@@ -25,18 +40,15 @@ Start the development server on `http://localhost:3000`
 npm run dev
 ```
 
-## Production
+#### Production
 
 Build the application for production:
 
 ```bash
-npm run build
+npm run generate
 ```
-
-Locally preview production build:
+Push it to Github-Pages:
 
 ```bash
-npm run preview
+npm run deploy
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

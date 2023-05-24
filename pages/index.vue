@@ -1,8 +1,8 @@
-<template xmlns="http://www.w3.org/1999/html">
+<template>
 
-  <div class="d-flex align-center justify-center flex-column h-screen">
+  <div class="d-flex align-center justify-center flex-column mt-5">
     <a href="https://github.com/drossner/sigweb-upcoming-newsletter"><v-icon color="black" icon="mdi-github" class="position-sticky" size="x-large"></v-icon></a>
-    <v-card class="main-container pa-8 ma-5 d-flex flex-column" style="gap: 1em">
+    <v-card class="main-container pa-6 ma-5 d-flex flex-column" style="gap: 1em">
       <h1>Export Settings</h1>
       <v-slide-y-transition group hide-on-leave="">
         <v-text-field key="1" hide-details prepend-inner-icon="mdi-web" label="Enter the iCal file URL" v-model="icalUrl" clearable=""></v-text-field>
@@ -12,14 +12,14 @@
         <v-text-field key="5" v-model="date" type="date" label="Use Events from" hide-details></v-text-field>
         <v-text-field key="52" v-model="author" label="Author" hide-details></v-text-field>
         <v-text-field key="53" v-model="position" label="Author Position" hide-details></v-text-field>
-        <v-text-field key="54" v-model="doi" label="DOI" persistent-hint="true" hint="e.g. 10.1145/3583849.3583854"></v-text-field>
+        <v-text-field key="54" v-model="doi" label="DOI" persistent-hint hint="e.g. 10.1145/3583849.3583854"></v-text-field>
 
         <v-btn key="6" @click="parseIcal" v-if="date.length === 10 && icaltext.length > 0" color="primary">Do the Magic</v-btn>
         <!--<v-list v-if="events.length > 0">
           <EventComponent v-for="event in events" :event="event"></EventComponent>
         </v-list>-->
         <v-textarea key="7" v-if="events.length > 0" v-model="latexOutput"></v-textarea>
-        <div key="8" v-if="events.length > 0" class="d-flex w-100" style="gap: 10px">
+        <div key="8" v-if="events.length > 0" class="d-flex flex-wrap w-100" style="gap: 10px">
           <v-btn @click="copyLatex">Copy LaTeX</v-btn>
           <v-btn @click="downloadZipFile">Download ZIP</v-btn>
           <v-btn @click="openInOverleaf">Open In Overleaf (Code)</v-btn>
@@ -194,8 +194,8 @@ async function createZip() {
 
 <style scoped>
   .main-container {
-    min-width: 300px;
+    min-width: 0;
     width: 800px;
-    margin: 0 auto;
+    max-width: 100%;
   }
 </style>
