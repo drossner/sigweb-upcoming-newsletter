@@ -7,7 +7,7 @@ export function calEventToTexEvent(calEvent: CalEvent): LatexEvent {
     const id = name.replaceAll(" ","")
     const short = name.substring(
         name.lastIndexOf("(")+1 < 0? 0 : name.lastIndexOf("(")+1,
-        name.lastIndexOf(")") < 0? 8 : name.indexOf(")")
+        name.lastIndexOf(")") < 0? name.length : name.indexOf(")")
     )
     // @ts-ignore
     const monthShort = monthNameShortMap[calEvent.startDate.toString().substring(5,7)]
