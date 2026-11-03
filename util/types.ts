@@ -1,7 +1,7 @@
 export interface CalEvent {
     summary: string
-    startDate: any
-    endDate: any
+    startDate: string
+    endDate: string
     description: string
     location: string
     contact: string
