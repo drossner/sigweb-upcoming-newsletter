@@ -4,22 +4,25 @@
     <a href="https://github.com/drossner/sigweb-upcoming-newsletter"><v-icon color="black" icon="mdi-github" class="position-sticky" size="x-large"></v-icon></a>
     <v-card class="main-container pa-6 ma-5 d-flex flex-column" style="gap: 1em">
       <h1>Export Settings</h1>
+      <v-alert v-if="calendarError" type="error" role="alert">{{ calendarError }}</v-alert>
+      <p v-if="calendarStatus" role="status">{{ calendarStatus }}</p>
       <v-slide-y-transition group hide-on-leave="">
-        <v-text-field key="1" hide-details prepend-inner-icon="mdi-web" label="Enter the iCal file URL" v-model="icalUrl" clearable=""></v-text-field>
-        <v-textarea key="2" hide-details label="Enter or load ical from URL" v-model="icaltext"></v-textarea>
-        <v-btn key="3" v-if="icalUrl != null && icalUrl.length > 0" @click="loadIcal">Load iCAL</v-btn>
+        <v-text-field key="from" v-model="date" type="date" label="Events from" :disabled="loadingCalendar" hide-details></v-text-field>
+        <v-text-field key="to" v-model="endDate" type="date" label="Events through" :disabled="loadingCalendar" hide-details></v-text-field>
+        <v-btn key="load" @click="loadConferences" :loading="loadingCalendar" :disabled="!validRange">Load conferences</v-btn>
+        <v-divider key="ical-divider" class="ma-5"></v-divider>
+        <p key="ical-heading">Or import iCal data</p>
+        <v-text-field key="ical-url" v-model="icalUrl" label="Enter the iCal file URL" prepend-inner-icon="mdi-web" clearable hide-details :disabled="loadingCalendar"></v-text-field>
+        <v-btn key="load-ical" @click="loadIcal" :disabled="!icalUrl || loadingCalendar">Load iCal</v-btn>
+        <v-textarea key="ical-text" v-model="icaltext" label="Enter or load iCal from URL" :disabled="loadingCalendar" hint="Paste calendar text here, or load it from a URL. The selected date range applies." persistent-hint></v-textarea>
         <v-divider key="4" class="ma-5"></v-divider>
-        <v-text-field key="5" v-model="date" type="date" label="Use Events from" hide-details></v-text-field>
         <v-text-field key="52" v-model="author" label="Author" hide-details></v-text-field>
         <v-text-field key="53" v-model="position" label="Author Position" hide-details></v-text-field>
         <v-text-field key="54" v-model="doi" label="DOI" persistent-hint hint="e.g. 10.1145/3583849.3583854"></v-text-field>
 
-        <v-btn key="6" @click="parseIcal" v-if="date.length === 10 && icaltext.length > 0" color="primary">Do the Magic</v-btn>
-        <!--<v-list v-if="events.length > 0">
-          <EventComponent v-for="event in events" :event="event"></EventComponent>
-        </v-list>-->
-        <v-textarea key="7" v-if="events.length > 0" v-model="latexOutput"></v-textarea>
-        <div key="8" v-if="events.length > 0" class="d-flex flex-wrap w-100" style="gap: 10px">
+        <v-btn key="6" @click="generateNewsletter" :disabled="loadingCalendar || !validRange" v-if="events.length > 0 || (calendarSource === 'ical' && icaltext.trim())" color="primary">Do the Magic</v-btn>
+        <v-textarea key="7" v-if="latexOutput" v-model="latexOutput"></v-textarea>
+        <div key="8" v-if="latexOutput" class="d-flex flex-wrap w-100" style="gap: 10px">
           <v-btn @click="copyLatex">Copy LaTeX</v-btn>
           <v-btn @click="downloadZipFile">Download ZIP</v-btn>
           <v-btn @click="openInOverleaf">Open In Overleaf (Code)</v-btn>
@@ -41,9 +44,9 @@
 <script setup lang="ts">
 
 import {useAppConfig} from "#app";
-import  ical from "ical.js/build/ical.min"
+import {loadConferenceRange} from "~/util/calendarUtil";
+import {parseICalendar} from "~/util/icalUtil";
 import {CalEvent} from "~/util/types";
-import EventComponent from "~/components/EventComponent.vue";
 import {downloadZip} from "client-zip";
 import {
   calEventToTexEvent,
@@ -52,9 +55,19 @@ import {
 } from "~/util/templateUtil";
 
 
-const icalUrl = ref(useAppConfig().iCalDefaultUrl)
+const loadingCalendar = ref(false)
+const calendarError = ref("")
+const calendarStatus = ref("")
+const icalUrl = ref("")
 const icaltext = ref("")
-const date = ref(new Date().toISOString().substring(0,10)) //yyyy-mm-dd
+const calendarSource = ref<'api' | 'ical'>('api')
+function localDate(value: Date) {
+  return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`
+}
+const today = new Date()
+const date = ref(localDate(today))
+const endDate = ref(localDate(new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())))
+const validRange = computed(() => /^\d{4}-\d{2}-\d{2}$/.test(date.value) && /^\d{4}-\d{2}-\d{2}$/.test(endDate.value) && date.value <= endDate.value)
 
 const latexOutput = ref("")
 const author = ref(useAppConfig().defaultAuthor)
@@ -68,29 +81,82 @@ const bannerInput = ref(null)
 
 const events = ref<CalEvent[]>([])
 
+watch([date, endDate], () => {
+  events.value = []
+  latexOutput.value = ""
+  calendarStatus.value = ""
+  calendarError.value = ""
+})
+watch([author, position, doi], () => { latexOutput.value = "" })
+watch(icaltext, () => {
+  calendarSource.value = 'ical'
+  events.value = []
+  latexOutput.value = ""
+  calendarStatus.value = ""
+  calendarError.value = ""
+})
+
 async function loadIcal() {
-  const ical = await (fetch(icalUrl.value, { mode: 'cors'}).then(data => data.text()))
-  icaltext.value = ical
+  if (!icalUrl.value || loadingCalendar.value) return
+  loadingCalendar.value = true
+  calendarError.value = ""
+  calendarStatus.value = ""
+  try {
+    const response = await fetch(icalUrl.value)
+    if (!response.ok) throw new Error(`Calendar request failed (${response.status}).`)
+    const text = await response.text()
+    parseICalendar(text, date.value, endDate.value)
+    icaltext.value = text
+    await nextTick()
+    calendarSource.value = 'ical'
+    calendarStatus.value = 'Loaded iCal data. Click Do the Magic to generate the newsletter.'
+  } catch (error) {
+    calendarError.value = error instanceof Error ? error.message : 'Could not load iCal data.'
+  } finally {
+    loadingCalendar.value = false
+  }
 }
 
-async function parseIcal() {
-  const calData = ical.parse(icaltext.value)
-  const calAPI = new ical.Component(calData)
-  const eventComponents = calAPI.getAllSubcomponents("vevent")
-  events.value.splice(0, events.value.length)
-  eventComponents.forEach(comp => {
-    const event = handleEvent(comp)
-    if(event.startDate > date.value) events.value.push(event)
-  })
-  events.value.sort((a,b) => a.startDate < b.startDate ? -1 : 1)
-  await fillTemplate()
+async function loadConferences() {
+  if (!validRange.value || loadingCalendar.value) return
+  loadingCalendar.value = true
+  calendarError.value = ""
+  calendarStatus.value = ""
+  events.value = []
+  latexOutput.value = ""
+  try {
+    events.value = await loadConferenceRange(useAppConfig().calendarApiUrl, date.value, endDate.value)
+    calendarSource.value = 'api'
+    const count = events.value.length
+    calendarStatus.value = count
+      ? `Loaded ${count} conference${count === 1 ? '' : 's'}. Click Do the Magic to generate the newsletter.`
+      : 'No sponsored or in-cooperation conferences found in this date range.'
+    const missing = events.value.filter(event => !event.description).length
+    if (missing) calendarStatus.value += ` ${missing} conference${missing === 1 ? ' has' : 's have'} no description; review the generated text before publication.`
+  } catch (error) {
+    calendarError.value = error instanceof Error ? error.message : 'Could not load conferences.'
+  } finally {
+    loadingCalendar.value = false
+  }
 }
 
-function handleEvent(eventComponent: any): CalEvent {
-  const aEvent = new ical.Event(eventComponent)
-  aEvent.contact = eventComponent.getFirstPropertyValue("contact")
-  aEvent.category = eventComponent.getFirstPropertyValue("categories")
-  return aEvent
+async function generateNewsletter() {
+  calendarError.value = ""
+  latexOutput.value = ""
+  try {
+    if (calendarSource.value === 'ical') {
+      events.value = []
+      events.value = parseICalendar(icaltext.value, date.value, endDate.value)
+      calendarStatus.value = events.value.length
+        ? `Imported ${events.value.length} conference${events.value.length === 1 ? '' : 's'} from iCal. Review descriptions before publication.`
+        : 'No sponsored or in-cooperation conferences found in this date range.'
+    }
+    if (!events.value.length) return
+    await fillTemplate()
+  } catch (error) {
+    latexOutput.value = ""
+    calendarError.value = error instanceof Error ? error.message : 'Could not generate the newsletter.'
+  }
 }
 
 async function fillTemplate(){
@@ -107,7 +173,9 @@ async function fillTemplate(){
     %TEMPLATE:\textbf{\hyperref[lab:%EVENT_ID%]{%EVENT_SHORT%}}  & %MONTH_SHORT% %BEGIN_DAY% -- %END_DAY%, %YEAR%   & %LOCATION%  & \url{%URL%}
   %TABLE_END
    */
-  let template = await fetch("templatex.tex").then(data => data.text())
+  const response = await fetch("templatex.tex")
+  if (!response.ok) throw new Error('Could not load the newsletter template. Please try again.')
+  let template = await response.text()
 
   const tableBeginIndex = template.indexOf(tableSelector)
   const templateIndex = template.indexOf(templateSelector, tableBeginIndex)

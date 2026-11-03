@@ -2,7 +2,7 @@ import {CalEvent, LatexEvent} from "~/util/types";
 
 export function calEventToTexEvent(calEvent: CalEvent): LatexEvent {
 
-    let name = calEvent.summary.substring(calEvent.summary.indexOf("-")+1)
+    let name = calEvent.summary.trim()
 
     const id = name.replaceAll(" ","")
     const short = name.substring(
