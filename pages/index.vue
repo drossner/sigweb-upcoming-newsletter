@@ -58,7 +58,7 @@ import {
 const loadingCalendar = ref(false)
 const calendarError = ref("")
 const calendarStatus = ref("")
-const icalUrl = ref("")
+const icalUrl = ref(useAppConfig().defaultIcalUrl)
 const icaltext = ref("")
 const calendarSource = ref<'api' | 'ical'>('api')
 function localDate(value: Date) {
