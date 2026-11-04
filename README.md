@@ -23,7 +23,8 @@ Click **Do the Magic** to generate the newsletter, then review and export it.
 The API must allow the GitHub Pages origin through CORS. Configure the endpoint
 in `app.config.ts` (`calendarApiUrl`).
 
-Alternatively, enter an iCal URL and click **Load iCal**, or paste calendar text
+Alternatively, click **Load iCal** to use the prefilled SIGWEB calendar URL,
+replace it with another iCal URL, or paste calendar text
 into **Enter or load iCal from URL**, then click **Do the Magic**. Both import
 paths use the selected date range. Loading conferences from the API switches
 back to API data; editing the iCal text switches to that text. No file upload
