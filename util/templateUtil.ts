@@ -4,7 +4,9 @@ export function calEventToTexEvent(calEvent: CalEvent): LatexEvent {
 
     let name = calEvent.summary.trim()
 
-    const id = name.replaceAll(" ","")
+    // Titles contain LaTeX escapes that cannot be used directly in link labels.
+    const id = name.replace(/\s/g, "").replace(/[^a-zA-Z0-9-]/gu,
+        character => "_" + character.codePointAt(0)!.toString(16) + "_")
     const short = name.substring(
         name.lastIndexOf("(")+1 < 0? 0 : name.lastIndexOf("(")+1,
         name.lastIndexOf(")") < 0? name.length : name.indexOf(")")
