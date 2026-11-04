@@ -56,6 +56,12 @@ const endDaySelector = "%END_DAY%"
 const yearSelector = "%YEAR%"
 const locationSelector = "%LOCATION%"
 const urlSelector = "%URL%"
+
+function formatWebsite(url: string): string {
+    const website = url.trim()
+    if (!website || /^tba$/i.test(website)) return "tba"
+    return "\\url{" + website + "}"
+}
 const descriptionSelector = "%DESCRIPTION%"
 const nameSelector = "%EVENT_NAME%"
 
@@ -68,7 +74,7 @@ export function insertLatexEventIntoTableTemplate(event: LatexEvent, template: s
     template = template.replace(endDaySelector, event.dayEnd)
     template = template.replace(yearSelector, event.year)
     template = template.replace(locationSelector, event.location)
-    template = template.replace(urlSelector, event.url)
+    template = template.replace(urlSelector, () => formatWebsite(event.url))
     return template
 }
 
@@ -83,7 +89,7 @@ export function insertLatexEventIntoDetailsTemplate(event: LatexEvent, template:
     template = template.replace(monthLongBeginSelector, event.monthStartLong)
     template = template.replace(monthLongEndSelector, event.monthEndLong)
     template = template.replace(idSelector, event.id)
-    template = template.replace(urlSelector, event.url)
+    template = template.replace(urlSelector, () => formatWebsite(event.url))
     return template
 }
 
