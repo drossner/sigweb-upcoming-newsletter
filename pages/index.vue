@@ -170,7 +170,7 @@ async function fillTemplate(){
   const detailsTemplateEndSelector = "%TEMPLATE_END"
   /*
   %TABLE_BEGIN
-    %TEMPLATE:\textbf{\hyperref[lab:%EVENT_ID%]{%EVENT_SHORT%}}  & %MONTH_SHORT% %BEGIN_DAY% -- %END_DAY%, %YEAR%   & %LOCATION%  & \url{%URL%}
+    %TEMPLATE:\textbf{\hyperref[lab:%EVENT_ID%]{%EVENT_SHORT%}}  & %MONTH_SHORT% %BEGIN_DAY% -- %END_DAY%, %YEAR%   & %LOCATION%  & %URL%
   %TABLE_END
    */
   const response = await fetch("templatex.tex")

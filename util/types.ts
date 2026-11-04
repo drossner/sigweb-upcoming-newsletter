@@ -9,7 +9,7 @@ export interface CalEvent {
 }
 
 
-// %TEMPLATE:\textbf{\hyperref[lab:%EVENT_ID%]{%EVENT_SHORT%}}  & %MONTH_SHORT_BEGIN% %BEGIN_DAY% -- %MONTH_SHORT_END% %END_DAY%, %YEAR%   & %LOCATION%  & \url{%URL%} \\
+// %TEMPLATE:\textbf{\hyperref[lab:%EVENT_ID%]{%EVENT_SHORT%}}  & %MONTH_SHORT_BEGIN% %BEGIN_DAY% -- %MONTH_SHORT_END% %END_DAY%, %YEAR%   & %LOCATION%  & %URL% \\
 export interface LatexEvent {
     id: string
     eventShortName: string
