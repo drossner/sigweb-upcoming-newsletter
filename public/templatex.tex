@@ -2,12 +2,13 @@
 
 \usepackage[english]{babel}
 
-\usepackage[a4paper,top=1.2cm,bottom=2.2cm,left=1.5cm,right=1.5cm,marginparwidth=1.75cm]{geometry}
+\usepackage[a4paper,top=1.5cm,bottom=2.2cm,left=1.5cm,right=1.5cm,marginparwidth=1.75cm,footskip=3mm]{geometry}
 
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{titling}
+\usepackage{xcolor}
 \usepackage{tabularray}
 \usepackage{hyperref}
 \usepackage{needspace}
@@ -35,15 +36,18 @@
 
         \par\noindent\rule{\textwidth}{0.1pt}
 
-        \vspace*{1em}
+        \vspace*{1.5em}
 
         \noindent{\large\bfseries SIGWEB Sponsored Conferences\par}
 
         \begin{table}[h!]
             \centering
             \begin{tblr}{
-                hlines = {wd=0.15pt},
-                hline{2} = {wd=0.25pt},
+                hline{1,2,Z} = {wd=0.25pt},
+                cells = {font=\small},
+                rows = {bg=white},
+                row{odd} = {bg=gray!8},
+                row{1} = {bg=white},
                 rowsep=1.45mm,
                 width=\linewidth,
                 column{3} = {wd = 3.8cm},
@@ -60,14 +64,17 @@
             \end{tblr}
         \end{table}
 
-        \vspace{1em}
+        \vspace{1.5em}
         \noindent{\large\bfseries SIGWEB Cooperating Conferences\par}
 
         \begin{table}[h!]
             \centering
             \begin{tblr}{
-                hlines = {wd=0.15pt},
-                hline{2} = {wd=0.25pt},
+                hline{1,2,Z} = {wd=0.25pt},
+                cells = {font=\small},
+                rows = {bg=white},
+                row{odd} = {bg=gray!8},
+                row{1} = {bg=white},
                 rowsep=1.45mm,
                 width=\linewidth,
                 column{3} = {wd = 3.8cm},
